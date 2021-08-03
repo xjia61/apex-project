@@ -4,13 +4,65 @@ import java.util.List;
 public class VendingMachine {
     private boolean on;
 
-    private Inventory<Item> itemInventory=new Inventory<Item>();
-    private Inventory<Item> soldInventory=new Inventory<>();
-    private List<Item> itemList=new ArrayList<>();
+    private Inventory<Item> itemInventory;
+    private Inventory<Item> soldInventory;
+    private List<Item> itemList;
     private int idx;
-    private boolean payment;
     private double totalSales;
 
+    public VendingMachine(){}
+    public VendingMachine(boolean on, Inventory<Item> itemInventory, Inventory<Item> soldInventory, List<Item> itemList, int idx, double totalSales) {
+        this.on = on;
+        this.itemInventory = itemInventory;
+        this.soldInventory = soldInventory;
+        this.itemList = itemList;
+        this.idx = idx;
+        this.totalSales = totalSales;
+    }
+
+    public void setOn(boolean on) {
+        this.on = on;
+    }
+
+    public Inventory<Item> getItemInventory() {
+        return itemInventory;
+    }
+
+    public void setItemInventory(Inventory<Item> itemInventory) {
+        this.itemInventory = itemInventory;
+    }
+
+    public Inventory<Item> getSoldInventory() {
+        return soldInventory;
+    }
+
+    public void setSoldInventory(Inventory<Item> soldInventory) {
+        this.soldInventory = soldInventory;
+    }
+
+    public List<Item> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<Item> itemList) {
+        this.itemList = itemList;
+    }
+
+    public int getIdx() {
+        return idx;
+    }
+
+    public void setIdx(int idx) {
+        this.idx = idx;
+    }
+
+    public double getTotalSales() {
+        return totalSales;
+    }
+
+    public void setTotalSales(double totalSales) {
+        this.totalSales = totalSales;
+    }
 
     public void powerButton() {
         on = !on;
@@ -54,7 +106,7 @@ public class VendingMachine {
         }
         twoLineDisplay("Welcome","Sold Out");
     }
-    public void downButton(int idx){
+    public void downButton(){
         if(itemList!=null){
             if(idx==0){
                 idx=itemList.size()-1;
@@ -62,8 +114,9 @@ public class VendingMachine {
                 idx--;
             }
         }
+        itemDisplay();
     }
-    public void upButton(int idx){
+    public void upButton(){
         if(itemList!=null){
             if(idx==itemList.size()-1){
                 idx=0;
@@ -71,20 +124,31 @@ public class VendingMachine {
                 idx++;
             }
         }
+        itemDisplay();
+
+    }
+
+    public void loaded(Item item, int quantity){
+        if(itemInventory.hasItem(item)){
+            itemInventory.put(item,itemInventory.getQuantity(item)+quantity);
+        }else{
+            itemInventory.put(item,quantity);
+            itemList.add(item);
+        }
     }
 
     public void reset(){
 
         idx=0;
-        payment=false;
         VMStatusDisplay();
-
 
     }
 
-    public void transaction(Item item, boolean payment){
+    public void paymentProcess(Item item){
         if(itemInventory.hasItem(item)){
-            if(payment){
+            paymentCallBack payment=new paymentCallBack();
+            boolean result =payment.execute();
+            if(result){
                 itemInventory.deduct(item);
                 totalSales+=item.getPrice();
                 soldInventory.add(item);
