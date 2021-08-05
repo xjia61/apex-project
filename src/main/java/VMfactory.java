@@ -64,40 +64,23 @@ public class VMfactory {
         VM.setIdx(idx);
 
         Product p=VM.getDirectory().get(idx);
-        String message ="| ON | Welcome                 | "+p.getProductName()+"$"+p.getPrice();
-        if(p.getQuantity()==0){
-            message+="Sold Out";
-            System.out.println(message+"    | If a product count is 0|");
-        }else {
-            System.out.println(message + "    | If up/down was pressed |");
-        }
-        s = new Scanner("down"); // Press up button
+        VM.printProduct(p);
+
+
+        s = new Scanner("down"); // Press down button
         str= s.next();
 
         if(str.equals("up")){
-
-            if(idx==0){
-                idx=VM.getDirectory().size()-1;
-            }else{
-                idx--;
-            }
+            VM.upButton();
         }else if(str.equals("down")){
-            if(idx==VM.getDirectory().size()-1){
-                idx=0;
-            }else{
-                idx++;
-            }
+
+            VM.downButton();
         }
-        VM.setIdx(idx);
+
 
         p=VM.getDirectory().get(idx);
-        message ="| ON | Welcome                 | "+p.getProductName()+"$"+p.getPrice();
-        if(p.getQuantity()==0){
-            message+="Sold Out";
-            System.out.println(message+"                | If a product count is 0|");
-        }else{
-            System.out.println(message+"                | If up/down was pressed |");
-        }
+        VM.printProduct(p);
+
 
         VM.setPayment(false);
 

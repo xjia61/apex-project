@@ -108,12 +108,27 @@ public class VMachine {
         String message ="| ON | Welcome                 | "+p.getProductName()+"$"+p.getPrice();
         if(p.getQuantity()==0){
             message+="Sold Out";
-            System.out.println(message+"                | If a product count is 0|");
+            System.out.println(message+"    | If a product count is 0|");
 
         }else{
             System.out.println(message+"                | If up/down was pressed |");
         }
 
+    }
+
+    public void upButton(){
+        if(idx==0){
+            idx=getDirectory().size()-1;
+        }else{
+            idx--;
+        }
+    }
+    public void downButton(){
+        if(idx==getDirectory().size()-1){
+            idx=0;
+        }else{
+            idx++;
+        }
     }
 
 
